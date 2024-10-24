@@ -1,38 +1,13 @@
-from dataclasses import dataclass
-import logging
 import time
 from textual import on
-from textual.app import App, ComposeResult
+from textual.app import ComposeResult
 from textual.screen import Screen
-from textual.widgets import Input, Label, Button
+from textual.widgets import Input, Label
 
-logger = logging.getLogger(__name__)
+from app.files import wisdom
+from app.wpm import WPM
 
 LINE_LIMIT = 45
-CHUNK_SIZE = 256
-
-
-def wisdom():
-    with open("./assets/alice-1.txt") as f:
-        while content := f.read(CHUNK_SIZE):
-            yield content
-
-
-@dataclass
-class WPM:
-    started: int | None = None
-    words: int = 0
-    last_wpm: int = 0
-
-    def count_wpm(self) -> int:
-        if not self.started:
-            return 0
-        period = int(time.time()) - self.started
-        if period == 0:
-            return 0
-        words_per_second = self.words / period
-        self.last_wpm = int(words_per_second * 60)
-        return self.last_wpm
 
 
 class MainWindow(Screen):
@@ -48,7 +23,7 @@ class MainWindow(Screen):
     def __accuracy(self) -> int:
         """Percentage"""
         rate = len(self.mistakes) / self.character
-        return 100 - int(rate * 100)
+        return int(100 - rate * 100)
 
     def compose(self) -> ComposeResult:
         yield Label("WPM: ", id=self.wpm_id)
@@ -109,27 +84,3 @@ class MainWindow(Screen):
             self.__process_right_character(event)
         else:
             self.__process_wrong_character(event)
-
-
-class YattUI(App[str]):
-    """Main TUI"""
-
-    CSS = """
-    MainWindow {
-        align: center middle;
-    }
-    Screen {
-        align: center middle;
-    }
-    #main {
-        width: 40;
-    }
-    """
-    SCREENS = {"main": MainWindow}
-
-    def compose(self) -> ComposeResult:
-        yield Button("Play", id="defmode")
-
-    @on(Button.Pressed, "#defmode")
-    def menu_button(self):
-        self.push_screen("main")

@@ -1,5 +1,5 @@
 import logging
-from gui import YattUI
+from app.ui import YattUI
 
 logging.basicConfig(
     filename="/home/alex/.cache/yatt/all.log",  # TODO create dirs
