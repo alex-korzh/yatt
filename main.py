@@ -1,8 +1,9 @@
 import logging
+from pathlib import Path
 from app.ui import YattUI
 
 logging.basicConfig(
-    filename="/home/alex/.cache/yatt/all.log",  # TODO create dirs
+    filename=Path.home() / ".cache/yatt/all.log",  # TODO create dirs
     filemode="a",
     format="%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s",
     datefmt="%H:%M:%S",

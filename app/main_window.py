@@ -35,7 +35,6 @@ class MainWindow(Screen):
     ) -> None:
         self.words = provider.provide()
         super().__init__(name, id, classes)
-        logger.debug("Finish init window")
 
     def __accuracy(self) -> int:
         """Percentage"""
