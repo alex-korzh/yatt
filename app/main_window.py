@@ -22,6 +22,10 @@ class MainWindow(Screen):
     wpm_id = "wpm"
     main_id = "main"
 
+    BINDINGS = [
+        ("ctrl+b", "dismiss"),
+    ]
+
     def __init__(
         self,
         provider: Provider,
@@ -87,7 +91,7 @@ class MainWindow(Screen):
         if event.input.value == "":
             return
         if len(event.input.placeholder) == 0:
-            self.parent.exit("You win")
+            self.dismiss("You win")
             return
 
         self.__update_placeholder(event.input)

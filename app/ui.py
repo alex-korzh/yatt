@@ -24,6 +24,9 @@ class YattUI(App[str]):
         width: 40;
     }
     """
+    SCREENS = {
+        "main": MainWindow,
+    }
 
     alice_id = "alice"
     random_id = "random_text"
