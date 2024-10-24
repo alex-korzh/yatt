@@ -1,2 +1,6 @@
+import os
+
+
 CHUNK_SIZE = 256
 LINE_LIMIT = 45
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")

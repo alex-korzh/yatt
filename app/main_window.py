@@ -82,7 +82,7 @@ class MainWindow(Screen):
         if event.input.value == "":
             return
         if len(event.input.placeholder) == 0:
-            self.exit("You win")
+            self.parent.exit("You win")
             return
 
         self.__update_placeholder(event.input)
