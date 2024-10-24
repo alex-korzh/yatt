@@ -6,7 +6,7 @@ from typing import Iterable, Literal
 
 from openai import OpenAI
 
-from app.constants import CHUNK_SIZE, OPENAI_API_KEY
+from app.constants import CHUNK_SIZE, OPENAI_API_KEY, OPENAI_PROMPT
 
 logger = logging.getLogger(__name__)
 
@@ -53,7 +53,7 @@ class ChatGPTProvider(Provider):
                 messages=[
                     {
                         "role": "user",
-                        "content": "Write me a text up to 2000 symbols to use as a typing practice inside of an app. It should feel like a genuine text for a user",
+                        "content": OPENAI_PROMPT,
                     }
                 ],
             )
