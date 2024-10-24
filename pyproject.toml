@@ -1,0 +1,16 @@
+[project]
+name = "yatt"
+version = "0.1.0"
+description = "Yet another typing test. Now with #AI!"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "openai>=1.52.2",
+    "textual>=0.84.0",
+]
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=8.3.3",
+    "ruff>=0.7.0",
+]
