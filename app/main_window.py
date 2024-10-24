@@ -1,3 +1,4 @@
+import logging
 import time
 from textual import on
 from textual.app import ComposeResult
@@ -7,6 +8,9 @@ from textual.widgets import Input, Label
 from app.constants import LINE_LIMIT
 from app.providers import Provider
 from app.wpm import WPM
+
+
+logger = logging.getLogger(__name__)
 
 
 class MainWindow(Screen):
@@ -27,6 +31,7 @@ class MainWindow(Screen):
     ) -> None:
         self.words = provider.provide()
         super().__init__(name, id, classes)
+        logger.debug("Finish init window")
 
     def __accuracy(self) -> int:
         """Percentage"""

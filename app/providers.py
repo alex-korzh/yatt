@@ -1,9 +1,14 @@
 import abc
+import json
+import logging
+import random
 from typing import Iterable, Literal
 
 from openai import OpenAI
 
 from app.constants import CHUNK_SIZE, OPENAI_API_KEY
+
+logger = logging.getLogger(__name__)
 
 
 class Provider(abc.ABC):
@@ -11,7 +16,7 @@ class Provider(abc.ABC):
         raise NotImplementedError
 
 
-class FileProvider(Provider):
+class TextFileProvider(Provider):
     def __init__(self, file: Literal["alice", "example"]) -> None:
         self.filename: str = {
             "alice": "./assets/alice-1.txt",
@@ -22,6 +27,18 @@ class FileProvider(Provider):
         with open(self.filename) as f:
             while content := f.read(CHUNK_SIZE):
                 yield content
+
+
+class JsonFileProvider(Provider):
+    def __init__(self) -> None:
+        self.filename = "./assets/1000.json"
+
+    def provide(self) -> Iterable[str]:
+        with open(self.filename) as f:
+            data = json.load(f)["words"]
+            chunks = (len(data) // CHUNK_SIZE) + 1
+            for i in range(0, chunks):
+                yield " ".join(random.sample(data, CHUNK_SIZE))
 
 
 class ChatGPTProvider(Provider):
