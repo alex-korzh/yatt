@@ -4,21 +4,29 @@ from textual.app import ComposeResult
 from textual.screen import Screen
 from textual.widgets import Input, Label
 
-from app.files import wisdom
+from app.constants import LINE_LIMIT
+from app.providers import Provider
 from app.wpm import WPM
-
-LINE_LIMIT = 45
 
 
 class MainWindow(Screen):
     character = 0
     wpm = WPM()
-    words = wisdom()
     mistakes = set()  # of positions
 
     accuracy_id = "accuracy"
     wpm_id = "wpm"
     main_id = "main"
+
+    def __init__(
+        self,
+        provider: Provider,
+        name: str | None = None,
+        id: str | None = None,
+        classes: str | None = None,
+    ) -> None:
+        self.words = provider.provide()
+        super().__init__(name, id, classes)
 
     def __accuracy(self) -> int:
         """Percentage"""
