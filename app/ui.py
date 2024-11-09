@@ -4,6 +4,7 @@ from textual.app import App, ComposeResult
 
 from textual.widgets import Button
 
+from app.config import config
 from app.main_window import MainWindow
 from app.providers import ChatGPTProvider, JsonFileProvider, TextFileProvider
 
@@ -35,7 +36,9 @@ class YattUI(App[str]):
 
     def compose(self) -> ComposeResult:
         yield Button("Alice", id=self.alice_id)
-        yield Button("AI-generated", id=self.random_id)
+        yield Button(
+            "AI-generated", id=self.random_id, disabled=config.openai.api_key is None
+        )
         yield Button("Common words", id=self.common_id)
         yield Button("Multiplayer", id=self.mp_id)
 

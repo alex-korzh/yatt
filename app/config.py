@@ -20,7 +20,6 @@ class OpenAIConfig(BaseModel):
     )
 
 # env names are case-insensitive
-# TODO configure toml config, get rid of envs
 class Config(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_prefix="yatt_")
     env: Literal["dev", "release"] = "release"
