@@ -5,7 +5,7 @@ from textual.app import ComposeResult
 from textual.screen import Screen
 from textual.widgets import Input, Label
 
-from app.constants import LINE_LIMIT
+from app.config import config
 from app.providers import Provider
 from app.wpm import WPM
 
@@ -38,6 +38,8 @@ class MainWindow(Screen):
 
     def __accuracy(self) -> int:
         """Percentage"""
+        if self.character == 0:
+            return 0
         rate = len(self.mistakes) / self.character
         return int(100 - rate * 100)
 
@@ -56,7 +58,7 @@ class MainWindow(Screen):
         self.__update_label(self.accuracy_id, f"Accuracy: {self.__accuracy()}")
 
     def __update_placeholder(self, input: Input):
-        if len(input.placeholder) < LINE_LIMIT:
+        if len(input.placeholder) < config.line_limit:
             try:
                 input.placeholder += next(self.words)
             except StopIteration:

@@ -5,8 +5,12 @@ description = "Yet another typing test. Now with #AI!"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "httpx>=0.27.2",
     "openai>=1.52.2",
+    "pydantic>=2.9.2",
+    "pydantic-settings>=2.6.1",
     "textual>=0.84.0",
+    "websockets>=13.1",
 ]
 
 [tool.uv]

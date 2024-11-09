@@ -6,7 +6,7 @@ from typing import Iterable, Literal
 
 from openai import OpenAI
 
-from app.constants import CHUNK_SIZE, OPENAI_API_KEY, OPENAI_PROMPT
+from app.config import config
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +25,7 @@ class TextFileProvider(Provider):
 
     def provide(self) -> Iterable[str]:
         with open(self.filename) as f:
-            while content := f.read(CHUNK_SIZE):
+            while content := f.read(config.chunk_size):
                 yield content
 
 
@@ -36,14 +36,14 @@ class JsonFileProvider(Provider):
     def provide(self) -> Iterable[str]:
         with open(self.filename) as f:
             data = json.load(f)["words"]
-            chunks = (len(data) // CHUNK_SIZE) + 1
+            chunks = (len(data) // config.chunk_size) + 1
             for i in range(0, chunks):
-                yield " ".join(random.sample(data, CHUNK_SIZE))
+                yield " ".join(random.sample(data, config.chunk_size))
 
 
 class ChatGPTProvider(Provider):
     def __init__(self) -> None:
-        if not OPENAI_API_KEY:
+        if not config.openai.api_key:
             raise Exception("No API key provided!")
         self.client = OpenAI()
         self.data = (
@@ -53,7 +53,7 @@ class ChatGPTProvider(Provider):
                 messages=[
                     {
                         "role": "user",
-                        "content": OPENAI_PROMPT,
+                        "content": config.openai.prompt,
                     }
                 ],
             )
@@ -62,5 +62,5 @@ class ChatGPTProvider(Provider):
         )
 
     def provide(self) -> Iterable[str]:
-        for i in range(0, len(self.data), CHUNK_SIZE):
-            yield self.data[i : i + CHUNK_SIZE]
+        for i in range(0, len(self.data), config.chunk_size):
+            yield self.data[i : i + config.chunk_size]

@@ -31,11 +31,13 @@ class YattUI(App[str]):
     alice_id = "alice"
     random_id = "random_text"
     common_id = "common_words"
+    mp_id = "mp"
 
     def compose(self) -> ComposeResult:
         yield Button("Alice", id=self.alice_id)
         yield Button("AI-generated", id=self.random_id)
         yield Button("Common words", id=self.common_id)
+        yield Button("Multiplayer", id=self.mp_id)
 
     @on(Button.Pressed, f"#{alice_id}")
     def alice_button(self):
