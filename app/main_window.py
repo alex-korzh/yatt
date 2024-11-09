@@ -1,23 +1,18 @@
 import logging
-import time
 from textual import on
 from textual.app import ComposeResult
 from textual.screen import Screen
 from textual.widgets import Input, Label
 
 from app.config import config
+from app.model import Model
 from app.providers import Provider
-from app.wpm import WPM
 
 
 logger = logging.getLogger(__name__)
 
 
 class MainWindow(Screen):
-    character = 0
-    wpm = WPM()
-    mistakes = set()  # of positions
-
     accuracy_id = "accuracy"
     wpm_id = "wpm"
     main_id = "main"
@@ -34,14 +29,9 @@ class MainWindow(Screen):
         classes: str | None = None,
     ) -> None:
         self.words = provider.provide()
+        self.model = Model()
         super().__init__(name, id, classes)
 
-    def __accuracy(self) -> int:
-        """Percentage"""
-        if self.character == 0:
-            return 0
-        rate = len(self.mistakes) / self.character
-        return int(100 - rate * 100)
 
     def compose(self) -> ComposeResult:
         yield Label("WPM: ", id=self.wpm_id)
@@ -54,8 +44,8 @@ class MainWindow(Screen):
     def __update_wpm(self, new_wpm: int):
         self.__update_label(self.wpm_id, f"WPM: {new_wpm}")
 
-    def __update_accuracy(self):
-        self.__update_label(self.accuracy_id, f"Accuracy: {self.__accuracy()}")
+    def __update_accuracy(self, new_accuracy: int):
+        self.__update_label(self.accuracy_id, f"Accuracy: {new_accuracy}")
 
     def __update_placeholder(self, input: Input):
         if len(input.placeholder) < config.line_limit:
@@ -64,27 +54,13 @@ class MainWindow(Screen):
             except StopIteration:
                 pass
 
-    def __start_timer(self):
-        if not self.wpm.started:
-            self.wpm.started = int(time.time())
-
-    def __process_word_ended(self):
-        self.wpm.words += 1
-        new_wpm = self.wpm.count_wpm()
-        if new_wpm != 0:
-            self.__update_wpm(new_wpm)
-        self.__update_accuracy()
-
     def __process_right_character(self, event: Input.Changed):
-        self.character += 1
-        if event.value == " ":
-            self.__process_word_ended()
+        self.model.character_typed()
         event.input.value = ""
         event.input.placeholder = event.input.placeholder[1:]
 
     def __process_wrong_character(self, event: Input.Changed):
-        self.mistakes.add(self.character)
-        self.__update_accuracy()
+        self.model.add_mistake()
         event.input.value = ""
 
     @on(Input.Changed, f"#{main_id}")
@@ -96,9 +72,13 @@ class MainWindow(Screen):
             return
 
         self.__update_placeholder(event.input)
-        self.__start_timer()
+        self.model.start_timer()
 
         if event.value == event.input.placeholder[0]:
             self.__process_right_character(event)
         else:
             self.__process_wrong_character(event)
+
+        self.__update_accuracy(self.model.accuracy)
+        self.__update_wpm(self.model.wpm)
+
