@@ -7,6 +7,7 @@ from textual.widgets import Button
 from app.config import config
 from app.main_window import MainWindow
 from app.providers import ChatGPTProvider, JsonFileProvider, TextFileProvider
+from app.server_window import ServerWindow
 
 logger = logging.getLogger(__name__)
 
@@ -21,13 +22,15 @@ class YattUI(App[str]):
     Screen {
         align: center middle;
     }
+    ServerWindow {
+        align: center middle;
+    }
     #main {
         width: 40;
     }
+
     """
-    SCREENS = {
-        "main": MainWindow,
-    }
+    SCREENS = {"main": MainWindow, "server": ServerWindow}
 
     alice_id = "alice"
     random_id = "random_text"
@@ -53,3 +56,7 @@ class YattUI(App[str]):
     @on(Button.Pressed, f"#{common_id}")
     def common_button(self):
         self.push_screen(MainWindow(JsonFileProvider()))
+
+    @on(Button.Pressed, f"#{mp_id}")
+    def mp_button(self):
+        self.push_screen(ServerWindow())
