@@ -5,9 +5,9 @@ from textual.app import App, ComposeResult
 from textual.widgets import Button
 
 from app.config import config
-from app.main_window import MainWindow
+from app.windows.main_window import MainWindow
 from app.providers import ChatGPTProvider, JsonFileProvider, TextFileProvider
-from app.server_window import ServerWindow
+from app.windows.server_window import ServerWindow
 
 logger = logging.getLogger(__name__)
 
