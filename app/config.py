@@ -8,7 +8,8 @@ class Auth0Config(BaseModel):
     client_id: str = "L2lsodWxvh2O6nv0NrSM9yj7rQSQFBpQ"
     base_url: str = "https://dev-6q3ehaa3i7va2sxb.eu.auth0.com/oauth/"
     api_id: str = "http://api.local"
-    
+
+
 class OpenAIConfig(BaseModel):
     api_key: str | None = None
     prompt: str = (
@@ -19,15 +20,17 @@ class OpenAIConfig(BaseModel):
         "Make sure the content is suitable for all ages and can be used as a typing exercise."
     )
 
+
 # env names are case-insensitive
 class Config(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_prefix="yatt_")
     env: Literal["dev", "release"] = "release"
-    local_key: str | None = None # ONLY for local ssl testing
+    local_key: str | None = None  # ONLY for local ssl testing
     chunk_size: int = 128
     line_limit: int = 45
     openai: OpenAIConfig = OpenAIConfig()
     auth0: Auth0Config = Auth0Config()
+    server_url: str = "wss://localhost:4443/ws"
 
 
 config = Config()

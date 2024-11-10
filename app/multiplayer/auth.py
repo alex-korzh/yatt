@@ -58,8 +58,3 @@ async def authenticate():
                 logger.debug(f"Error: {maybe_token['error_description']}")
     print(maybe_token)
     return maybe_token["access_token"]
-
-
-
-if __name__ == "__main__":
-    asyncio.run(authenticate())
