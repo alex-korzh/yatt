@@ -10,3 +10,9 @@ wheels/
 .venv
 .idea
 .env
+
+# Cache
+.mypy_cache
+
+# Emacs
+.dir-locals.el

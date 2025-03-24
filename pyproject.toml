@@ -18,3 +18,10 @@ dev-dependencies = [
     "pytest>=8.3.3",
     "ruff>=0.7.0",
 ]
+
+[tool.uv.workspace]
+members = ["app"]
+
+[tool.pyright]
+extraPaths = [".venv"]
+typeCheckingMode = "basic"
